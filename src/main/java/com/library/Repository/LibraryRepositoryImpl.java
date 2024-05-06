@@ -271,7 +271,7 @@ public class LibraryRepositoryImpl implements LibraryRepository {
 		return list;
 	}
 
-	public void returnBook(String cellNo, String studentid) {
+	/*public void returnBook(String cellNo, String studentid) {
 		
 		Session session = sf.openSession();
 		
@@ -281,6 +281,27 @@ public class LibraryRepositoryImpl implements LibraryRepository {
 		session.saveOrUpdate(stu);
 		session.beginTransaction().commit();
 		
+	}*/
+
+	public void returnBook(String cellNo, String studentid) {
+	    try {
+	        Session session = sf.openSession();
+	        Student stu = session.get(Student.class, studentid);
+	        
+	        if (stu != null) {
+	            stu.setReturnStatus("yes");
+	            session.saveOrUpdate(stu);
+	            session.beginTransaction().commit();
+	        } else {
+	            // Handle the case where student is not found
+	            System.out.println("Student with ID " + studentid + " not found.");
+	            // You can throw an exception or handle it according to your application logic
+	        }
+	    } catch (Exception e) {
+	        // Handle any other exceptions that might occur
+	        e.printStackTrace(); // or log the exception
+	        // You can also throw a custom exception or handle it based on your application requirements
+	    }
 	}
 
 
