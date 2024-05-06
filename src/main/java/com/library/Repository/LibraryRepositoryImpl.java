@@ -395,8 +395,6 @@ public class LibraryRepositoryImpl implements LibraryRepository {
 	//check the return Stutes:
 
 	public boolean checkReturnStatusByStudentId(String studentid) {
-		
-		
 	    Session session = sf.openSession();
 
 	    // Create a query to retrieve the student based on the student ID
@@ -408,9 +406,10 @@ public class LibraryRepositoryImpl implements LibraryRepository {
 
 	    session.close(); // Close the session
 
-	    // Check if the student exists and their return status is valid
-	    return student != null && "Yes".equalsIgnoreCase(student.getReturnStatus());
+	    // Check if the student doesn't exist or their return status is not "Yes"
+	    return student == null || "Yes".equalsIgnoreCase(student.getReturnStatus());
 	}
+
 
 
 
