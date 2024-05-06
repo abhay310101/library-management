@@ -99,23 +99,35 @@ public class Librariancontroller {
 	}
 	
 	@RequestMapping("/AddIssuebook")
-	public String Addisuuebook(@ModelAttribute Student issuebook, Model model) {
-	    System.out.println("Inside controller layer");
-	    System.out.println(issuebook.toString());
-	    
-	    // Check the return status of the student
-	    boolean canIssueBook = service.checkReturnStatusByStudentId(issuebook.getStudentid());
+    public String addIssuebook(@ModelAttribute Student issuebook, Model model) {
+        System.out.println("Inside controller layer");
+        System.out.println(issuebook.toString());
+        
+        // Check if the book is new or old
+        boolean isNewBook = issuebook.getCellno() == null; // Assuming id is null for new books
+        
+        if (isNewBook) {
+            // If it's a new book, directly save it without checking return status
+            service.saveIssuebook(issuebook);
+          
+        } else {
+            // If it's an old book, check the return status
+            boolean canIssueBook = service.checkReturnStatusByStudentId(issuebook.getStudentid());
 
-	    if (!canIssueBook) {
-	        // If the return status is "No", add an error message to the model
-	        model.addAttribute("message", "You cannot issue a new book as you haven't returned the previous one.");
-	        return "Issue_Book";
-	    } else {
-	        // If the return status is "Yes", proceed with saving the issuebook
-	        service.saveIssuebook(issuebook);
-	        return "Issue_Book";
-	    }
-	}
+            if (!canIssueBook) {
+                // If the return status is "No", add an error message to the model
+                model.addAttribute("message", "You cannot issue a new book as you haven't returned the previous one.");
+            } else {
+                // If the return status is "Yes", proceed with saving the issuebook
+                service.saveIssuebook(issuebook);
+                
+            }
+        }
+        
+        // Return the view name
+        return "Issue_Book";
+    }
+
 
 	
 	@RequestMapping("/returnBook")
